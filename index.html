@@ -3,39 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ramadan Habit Tracker</title>
+    <title>Prayer Times Tracker</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="app">
-      <header>
-        <h1>Ramadan Tracker</h1>
-      </header>
-      <div class="section">
-        <h2>Prayer Times</h2>
-        <ul id="prayer-times">
-          <li>Fajr: <span id="fajr-time">--:--</span></li>
-          <li>Dhuhr: <span id="dhuhr-time">--:--</span></li>
-          <li>Asr: <span id="asr-time">--:--</span></li>
-          <li>Maghrib: <span id="maghrib-time">--:--</span></li>
-          <li>Isha: <span id="isha-time">--:--</span></li>
-        </ul>
+    <header>
+      <h1>Welcome, Hafizz2</h1>
+      <p id="currentDate"></p>
+    </header>
+    <main>
+      <h2>Prayer Times</h2>
+      <ul id="prayerTimes"></ul>
+      <canvas id="prayerCompletionChart" width="200" height="200"></canvas>
+      <div class="buttons">
+        <button onclick="location.href='index.html'">Home</button>
+        <button onclick="location.href='all_apps.html'">All Apps</button>
+        <button onclick="location.href='profile.html'">Profile</button>
       </div>
-      <div class="section">
-        <h2>Daily Salah Tracker</h2>
-        <ul id="salah-tracker">
-          <li><input type="checkbox" id="fajr-check" /> Fajr</li>
-          <li><input type="checkbox" id="dhuhr-check" /> Dhuhr</li>
-          <li><input type="checkbox" id="asr-check" /> Asr</li>
-          <li><input type="checkbox" id="maghrib-check" /> Maghrib</li>
-          <li><input type="checkbox" id="isha-check" /> Isha</li>
-        </ul>
-      </div>
-      <div class="section">
-        <h2>Quran Reading</h2>
-        <button id="quran-complete">Mark as Read</button>
-      </div>
-    </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
