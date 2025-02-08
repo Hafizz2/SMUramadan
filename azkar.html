@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Azkar - Muslim Website</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Azkar</h1>
+    </header>
+
+    <main>
+      <section>
+        <h2>Morning Azkar</h2>
+        <button onclick="showAzkar('morning')">Show Morning Azkar</button>
+        <div id="morningAzkar" style="display: none">
+          <!-- Morning Azkar will be populated here -->
+        </div>
+      </section>
+
+      <section>
+        <h2>Night Azkar</h2>
+        <button onclick="showAzkar('night')">Show Night Azkar</button>
+        <div id="nightAzkar" style="display: none">
+          <!-- Night Azkar will be populated here -->
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="azkar.html">Azkar</a>
+        <a href="prayer-times.html">Prayer Times</a>
+        <a href="quran-reader.html">Quran Reader</a>
+        <a href="books.html">Books</a>
+        <a href="zikr-counter.html">Zikr Counter</a>
+      </nav>
+    </footer>
+
+    <script>
+      const azkar = {
+        morning: [
+          { text: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", count: 1 },
+          { text: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا", count: 1 },
+          { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", count: 100 },
+        ],
+        night: [
+          { text: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", count: 1 },
+          { text: "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا", count: 1 },
+          { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", count: 100 },
+        ],
+      };
+
+      function showAzkar(type) {
+        const azkarList = type === "morning" ? azkar.morning : azkar.night;
+        const container = document.getElementById(`${type}Azkar`);
+        container.innerHTML = azkarList
+          .map(
+            (zikr, index) => `
+            <div class="zikr-item">
+              <p>${zikr.text}</p>
+              <button onclick="decreaseCount('${type}', ${index})">${zikr.count}</button>
+            </div>
+          `
+          )
+          .join("");
+        container.style.display = "block";
+      }
+
+      function decreaseCount(type, index) {
+        const azkarList = type === "morning" ? azkar.morning : azkar.night;
+        if (azkarList[index].count > 0) {
+          azkarList[index].count--;
+          showAzkar(type); // Refresh the list
+        }
+      }
+    </script>
+  </body>
+</html>

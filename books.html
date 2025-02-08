@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Books - SMU MUSLIM STUDENTS</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Books</h1>
+    </header>
+
+    <main>
+      <section>
+        <h2>Select a Book</h2>
+        <select id="bookSelector" onchange="loadBook()">
+          <option value="">Choose a Book</option>
+          <!-- Book options will be populated by JavaScript -->
+        </select>
+      </section>
+
+      <section id="bookSection" style="display: none">
+        <h2 id="bookTitle"></h2>
+        <div id="chaptersList"></div>
+        <div id="chapterContent" style="display: none">
+          <h3 id="chapterTitle"></h3>
+          <div id="chapterText"></div>
+          <button onclick="goBackToChapters()">Back to Chapters</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="azkar.html">Azkar</a>
+        <a href="prayer-times.html">Prayer Times</a>
+        <a href="quran-reader.html">Quran Reader</a>
+        <a href="books.html">Books</a>
+        <a href="zikr-counter.html">Zikr Counter</a>
+      </nav>
+    </footer>
+
+    <script>
+      // Sample book data (can be expanded)
+      const books = [
+        {
+          id: 1,
+          title: "Riyad us-Saliheen",
+          chapters: [
+            {
+              title: "Chapter 1: Repentance",
+              content: "Content for Chapter 1...",
+            },
+            {
+              title: "Chapter 2: Patience",
+              content: "Content for Chapter 2...",
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "Forty Hadith",
+          chapters: [
+            {
+              title: "Hadith 1: Intentions",
+              content: "Content for Hadith 1...",
+            },
+            { title: "Hadith 2: Faith", content: "Content for Hadith 2..." },
+          ],
+        },
+      ];
+
+      // Populate the book selector
+      function populateBookSelector() {
+        const bookSelector = document.getElementById("bookSelector");
+        books.forEach((book) => {
+          const option = document.createElement("option");
+          option.value = book.id;
+          option.textContent = book.title;
+          bookSelector.appendChild(option);
+        });
+      }
+
+      // Load the selected book
+      function loadBook() {
+        const bookId = document.getElementById("bookSelector").value;
+        if (!bookId) return;
+
+        const book = books.find((b) => b.id == bookId);
+        document.getElementById("bookTitle").textContent = book.title;
+        document.getElementById("chaptersList").innerHTML = book.chapters
+          .map(
+            (chapter, index) =>
+              `<div class="chapter" onclick="loadChapter(${index})">${chapter.title}</div>`
+          )
+          .join("");
+        document.getElementById("bookSection").style.display = "block";
+      }
+
+      // Load a chapter
+      function loadChapter(index) {
+        const bookId = document.getElementById("bookSelector").value;
+        const book = books.find((b) => b.id == bookId);
+        const chapter = book.chapters[index];
+
+        document.getElementById("chapterTitle").textContent = chapter.title;
+        document.getElementById("chapterText").textContent = chapter.content;
+        document.getElementById("chaptersList").style.display = "none";
+        document.getElementById("chapterContent").style.display = "block";
+      }
+
+      // Go back to the chapters list
+      function goBackToChapters() {
+        document.getElementById("chaptersList").style.display = "block";
+        document.getElementById("chapterContent").style.display = "none";
+      }
+
+      // Initialize the page
+      populateBookSelector();
+    </script>
+  </body>
+</html>

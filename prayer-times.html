@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prayer Times - Muslim Website</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Prayer Times</h1>
+    </header>
+
+    <main>
+      <section>
+        <h2>Today's Prayer Times</h2>
+        <p id="location">Fetching your location...</p>
+        <ul id="prayerTimes">
+          <li>Fajr: <span id="fajr">--:--</span></li>
+          <li>Dhuhr: <span id="dhuhr">--:--</span></li>
+          <li>Asr: <span id="asr">--:--</span></li>
+          <li>Maghrib: <span id="maghrib">--:--</span></li>
+          <li>Isha: <span id="isha">--:--</span></li>
+        </ul>
+        <button onclick="fetchPrayerTimes()">Refresh</button>
+      </section>
+    </main>
+
+    <footer>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="azkar.html">Azkar</a>
+        <a href="prayer-times.html">Prayer Times</a>
+        <a href="quran-reader.html">Quran Reader</a>
+        <a href="books.html">Books</a>
+        <a href="zikr-counter.html">Zikr Counter</a>
+      </nav>
+    </footer>
+
+    <script>
+      function fetchPrayerTimes() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+              getPrayerTimes(latitude, longitude);
+            },
+            (error) => {
+              document.getElementById("location").textContent =
+                "Unable to fetch location. Please enable location access.";
+            }
+          );
+        } else {
+          document.getElementById("location").textContent =
+            "Geolocation is not supported by your browser.";
+        }
+      }
+
+      function getPrayerTimes(latitude, longitude) {
+        const apiUrl = `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=2`;
+
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            const timings = data.data.timings;
+            document.getElementById("fajr").textContent = timings.Fajr;
+            document.getElementById("dhuhr").textContent = timings.Dhuhr;
+            document.getElementById("asr").textContent = timings.Asr;
+            document.getElementById("maghrib").textContent = timings.Maghrib;
+            document.getElementById("isha").textContent = timings.Isha;
+            document.getElementById("location").textContent =
+              "Prayer times for your location:";
+          })
+          .catch((error) => {
+            document.getElementById("location").textContent =
+              "Failed to fetch prayer times. Please try again.";
+          });
+      }
+
+      // Fetch prayer times when the page loads
+      fetchPrayerTimes();
+    </script>
+  </body>
+</html>
