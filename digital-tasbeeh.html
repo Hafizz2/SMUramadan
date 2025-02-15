@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tesbeeh</title>
+    <link rel="stylesheet" href="tasbeeh.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div id="navbar-placeholder"></div>
+
+    <h2>ዲጂታል ሙስበሃ</h2>
+    <div class="counter-wrapper">
+      <div class="circle-container" id="zikrCircle">
+        <div class="count" id="currentCount">0</div>
+        <div class="total" id="totalCount">Total: 0</div>
+      </div>
+      <select id="zikrSelect"></select>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <script>
+      // Fetch and insert the navbar
+      fetch("header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("navbar-placeholder").innerHTML = data;
+        })
+        .catch((error) => console.error("Error loading navbar:", error));
+
+      let currentZikr = null;
+      let counts = {};
+      let totalCount = 0;
+
+      // Helper function to get today's date string in YYYY-MM-DD format
+      function getTodayDate() {
+        return new Date().toISOString().split("T")[0];
+      }
+
+      // On load, initialize from localStorage and load zikr list
+      window.addEventListener("load", () => {
+        // Restore stored data if available and if it is from today
+        const savedData = localStorage.getItem("zikrData");
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          if (data.lastUpdate === getTodayDate()) {
+            counts = data.counts;
+            totalCount = data.totalCount;
+          } else {
+            // Data is outdated, clear it
+            localStorage.removeItem("zikrData");
+            counts = {};
+            totalCount = 0;
+          }
+        }
+
+        // Load zikr list from zikr.json
+        fetch("zikr.json")
+          .then((response) => response.json())
+          .then((zikrs) => {
+            const select = document.getElementById("zikrSelect");
+            zikrs.forEach((zikr) => {
+              const option = document.createElement("option");
+              option.value = zikr.name;
+
+              // Initialize counts for each zikr if not already stored
+              if (!counts[zikr.name]) {
+                counts[zikr.name] = {
+                  remaining: zikr.count, // countdown value
+                  extra: 0, // extra recitations after reaching 0
+                  initial: zikr.count,
+                };
+              }
+              option.textContent = getOptionText(zikr.name);
+              select.appendChild(option);
+            });
+
+            // Set the first zikr as default
+            currentZikr = zikrs[0].name;
+            updateDisplay();
+          });
+      });
+
+      // Returns the text for a dropdown option based on the current count
+      function getOptionText(name) {
+        const data = counts[name];
+        if (!data) return "";
+        if (data.remaining > 0) {
+          return `${name} (${data.remaining})`;
+        } else {
+          // If countdown is done, show extra recitations (if any) with a plus sign
+          return data.extra > 0 ? `${name} (+${data.extra})` : `${name} (0)`;
+        }
+      }
+
+      // Update all dropdown options to reflect live counts
+      function updateDropdown() {
+        const select = document.getElementById("zikrSelect");
+        for (let i = 0; i < select.options.length; i++) {
+          const option = select.options[i];
+          const name = option.value;
+          option.textContent = getOptionText(name);
+        }
+      }
+
+      // Handle zikr selection change
+      document.getElementById("zikrSelect").addEventListener("change", (e) => {
+        currentZikr = e.target.value;
+        updateDisplay();
+      });
+
+      // Handle clicks on the circular counter
+      document.getElementById("zikrCircle").addEventListener("click", () => {
+        if (!currentZikr) return;
+        const zikrData = counts[currentZikr];
+
+        // If there are still recitations remaining, count down; otherwise count extra
+        if (zikrData.remaining > 0) {
+          zikrData.remaining--;
+        } else {
+          zikrData.extra++;
+        }
+        totalCount++;
+
+        // Update circle background: green when countdown is done
+        const circle = document.getElementById("zikrCircle");
+        if (zikrData.remaining === 0) {
+          circle.classList.add("active");
+        } else {
+          circle.classList.remove("active");
+        }
+
+        saveData();
+        updateDisplay();
+      });
+
+      // Reset button clears stored data and reloads the page
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        localStorage.removeItem("zikrData");
+        location.reload();
+      });
+
+      // Update the main display and the dropdown list
+      function updateDisplay() {
+        const zikrData = counts[currentZikr];
+        const currentCountElem = document.getElementById("currentCount");
+
+        // In the circle, show remaining if still positive; otherwise show extra with a plus sign (or 0 if no extras)
+        if (zikrData.remaining > 0) {
+          currentCountElem.textContent = zikrData.remaining;
+        } else {
+          currentCountElem.textContent =
+            zikrData.extra > 0 ? `+${zikrData.extra}` : "0";
+        }
+        document.getElementById(
+          "totalCount"
+        ).textContent = `Total: ${totalCount}`;
+        updateDropdown();
+      }
+
+      // Save current data to localStorage including a timestamp (date string)
+      function saveData() {
+        localStorage.setItem(
+          "zikrData",
+          JSON.stringify({
+            counts,
+            totalCount,
+            lastUpdate: getTodayDate(),
+          })
+        );
+      }
+    </script>
+  </body>
+</html>

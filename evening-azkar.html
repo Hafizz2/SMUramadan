@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="main.css" />
+    <title>أذكار المسلم</title>
+  </head>
+  <body>
+    <!-- Header will be inserted here -->
+    <div id="navbar-placeholder"></div>
+
+    <main>
+      <h1>أذكار المساء |የማታ ዚክር</h1>
+      <ul class="azkar-list" id="azkarContainer"></ul>
+    </main>
+
+    <!-- Arabic Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Fetch and insert the navbar
+      fetch("header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("navbar-placeholder").innerHTML = data;
+        })
+        .catch((error) => console.error("Error loading navbar:", error));
+      // Fetch azkar from JSON file
+      fetch("evening_zikr.json")
+        .then((response) => response.json())
+        .then((azkar) => {
+          const container = document.getElementById("azkarContainer");
+
+          azkar.forEach((zikr) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+        <span class="dua">${zikr.text}</span>
+        <span class="count">${zikr.count}</span>
+        `;
+            li.dataset.count = zikr.count;
+            container.appendChild(li);
+          });
+
+          // Add click handler
+          container.addEventListener("click", (event) => {
+            const listItem = event.target.closest("li");
+            if (listItem) {
+              const countElement = listItem.querySelector(".count");
+              let count = parseInt(countElement.textContent);
+
+              if (count > 0) {
+                count--;
+                countElement.textContent = count;
+
+                if (count === 0) {
+                  listItem.classList.add("hidden");
+                }
+              }
+            }
+          });
+        })
+        .catch((error) => console.error("Error loading azkar:", error));
+    </script>
+  </body>
+</html>

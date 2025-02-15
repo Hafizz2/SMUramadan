@@ -1,51 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home - SMU MUSLIM STUDENTS</title>
+    <title>St. Mary's Muslim Students</title>
     <link rel="stylesheet" href="styles.css" />
+    <!-- Font Awesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- Arabic Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <header>
-      <h1>Welcome to SMU MUSLIM STUDENTS Website</h1>
-    </header>
+    <!-- Navigation Bar -->
+    <div id="navbar-placeholder"></div>
+    <!-- Full-Width Image -->
+    <div class="hero-image">
+      <h1>Welcome To St Marry's University Muslim Students portal</h1>
+    </div>
 
-    <main>
-      <section>
-        <h2>Azkar</h2>
-        <p>Access morning and evening Azkar.</p>
-        <a href="azkar.html">Go to Azkar</a>
-      </section>
+    <!-- Rectangular Buttons -->
+    <div class="button-grid">
+      <a href="morning-azkar.html" class="button-card">
+        <i class="fas fa-sun"></i>
+        <h2>أذكار الصباح | የጠዋት ዚክር</h2>
+        <p>አላህን በማስታወስ ቀኖትን ይጀምሩ</p>
+      </a>
+      <a href="evening-azkar.html" class="button-card">
+        <i class="fas fa-moon"></i>
+        <h2>أذكار المساء | የማታ ዚክር</h2>
+        <p>አላህን በማስታወስ ቀኑን ይጨርሱ</p>
+      </a>
+      <a href="digital-tasbeeh.html" class="button-card">
+        <i class="fas fa-hands-praying"></i>
+        <h2>التسبيح الرقمي | ዲጂታል ሙስበሃ</h2>
+        <p>ቀላል ተስቢህ እና ዚክር ማድረጊያ</p>
+      </a>
+      <a href="ebook.html" class="button-card">
+        <i class="fas fa-book"></i>
+        <h2>الكتاب الإلكتروني | ኤ-መፅሃፍ</h2>
+        <p>ዲጂታል ፅሁፎችን ያንብቡ</p>
+      </a>
+    </div>
 
-      <section>
-        <h2>Prayer Times</h2>
-        <p>Get prayer times for your location.</p>
-        <a href="prayer-times.html">Go to Prayer Times</a>
-      </section>
-
-      <section>
-        <h2>Quran Reader</h2>
-        <p>Read the Quran with ease.</p>
-        <a href="quran-reader.html">Go to Quran Reader</a>
-      </section>
-
-      <section>
-        <h2>Books</h2>
-        <p>Explore Islamic books and writings.</p>
-        <a href="books.html">Go to Books</a>
-      </section>
-    </main>
-
-    <footer>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="azkar.html">Azkar</a>
-        <a href="prayer-times.html">Prayer Times</a>
-        <a href="quran-reader.html">Quran Reader</a>
-        <a href="books.html">Books</a>
-        <a href="zikr-counter.html">Zikr Counter</a>
-      </nav>
+    <!-- Footer -->
+    <footer class="contact-info">
+      <p>
+        አድራሻ ሜክሲኮ, አዲስ አበባ , ኢትዮጵያ በተለያዩ የሶሻል ሚድያ አማራጮች እንገኛለን። ወይም በ ቴሌግራም
+        @stmarymuslims ያገኙናል::
+      </p>
     </footer>
+
+    <script>
+      // Fetch and insert the navbar
+      fetch("header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("navbar-placeholder").innerHTML = data;
+        })
+        .catch((error) => console.error("Error loading navbar:", error));
+    </script>
   </body>
 </html>

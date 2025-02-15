@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ebook of SMUMS portal</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Amiri", sans-serif;
+        background: #f0f0f0;
+      }
+
+      /* Navigation Bar */
+      .navbar {
+        background-color: #009688; /* Islamic green */
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        font-size: 1.1em;
+        transition: background-color 0.3s ease;
+      }
+
+      .navbar a.active {
+        background-color: #00796b; /* Darker green for active link */
+        border-radius: 5px;
+      }
+
+      .navbar a:hover {
+        background-color: #00796b; /* Darker green on hover */
+        border-radius: 5px;
+      }
+
+      .hadith-container {
+        max-width: 800px;
+        margin: 1rem auto;
+        padding: 1rem;
+      }
+      .section-title {
+        color: #2c3e50;
+        border-bottom: 2px solid #00cdab;
+        padding-bottom: 0.5rem;
+        margin-top: 0;
+      }
+      .hadith-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        line-height: 1.8;
+        font-size: 1.1rem;
+        margin-top: 1rem;
+      }
+      quote {
+        display: block;
+        margin: 1rem 0;
+        padding: 1rem;
+        border-right: 3px solid #2c3e50;
+        background: #f8f9fa;
+        font-style: italic;
+        color: #2c3e50;
+      }
+      .highlight {
+        color: #e74c3c;
+        font-weight: bold;
+      }
+      /* Scrollable navigation buttons container in LTR order */
+      .nav-buttons {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+        padding-bottom: 0.5rem;
+        direction: ltr;
+      }
+      .nav-buttons button {
+        flex: 0 0 auto;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        background: #2c3e50;
+        color: #fff;
+        border-radius: 5px;
+      }
+      .nav-buttons button.active {
+        background: #e74c3c;
+      }
+      /* Hide scrollbar for WebKit */
+      .nav-buttons::-webkit-scrollbar {
+        height: 6px;
+      }
+      .nav-buttons::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="navbar-placeholder"></div>
+
+    <main>
+      <div class="hadith-container">
+        <h1 class="section-title">ከጓደኛዬ ጋር</h1>
+        <!-- Scrollable navigation buttons for days -->
+        <div id="navButtons" class="nav-buttons"></div>
+        <!-- Hadith content display -->
+        <div id="hadithDisplay" class="hadith-content"></div>
+      </div>
+    </main>
+
+    <script>
+      // Fetch and insert the navbar
+      fetch("header.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("navbar-placeholder").innerHTML = data;
+        })
+        .catch((error) => console.error("Error loading navbar:", error));
+
+      // Load hadith data from hadith.json
+      fetch("hadith.json")
+        .then((response) => response.json())
+        .then((data) => {
+          const hadithDisplay = document.getElementById("hadithDisplay");
+          const navButtons = document.getElementById("navButtons");
+
+          // Get today's day (1-30). If today > 30, default to 1.
+          let currentDay = new Date().getDate();
+          if (currentDay > 30) currentDay = 1;
+
+          // Function to display hadith for a given day
+          function showHadith(day) {
+            const hadith = data.find((h) => h.day === parseInt(day));
+            if (hadith) {
+              hadithDisplay.innerHTML = parseStyling(hadith.text);
+              updateActiveButton(day);
+            }
+          }
+
+          // Function to update active button style
+          function updateActiveButton(activeDay) {
+            const buttons = document.querySelectorAll(
+              ".nav-buttons button[data-day]"
+            );
+            buttons.forEach((btn) => {
+              btn.classList.toggle(
+                "active",
+                btn.getAttribute("data-day") == activeDay
+              );
+            });
+          }
+
+          // Create day buttons
+          function createNavButtons() {
+            data.forEach((hadith) => {
+              const btn = document.createElement("button");
+              btn.textContent = hadith.day;
+              btn.setAttribute("data-day", hadith.day);
+              btn.addEventListener("click", () => {
+                currentDay = hadith.day;
+                showHadith(currentDay);
+              });
+              navButtons.appendChild(btn);
+            });
+          }
+
+          // Function to convert custom tags to styled HTML (if needed)
+          function parseStyling(text) {
+            return text
+              .replace(/<quote>/g, "<quote>")
+              .replace(/<\/quote>/g, "</quote>")
+              .replace(/<b>/g, "<strong>")
+              .replace(/<\/b>/g, "</strong>")
+              .replace(/<u>/g, '<span style="text-decoration:underline">')
+              .replace(/<\/u>/g, "</span>");
+          }
+
+          createNavButtons();
+          showHadith(currentDay);
+
+          // Scroll the current day's button into view
+          setTimeout(() => {
+            const currentBtn = document.querySelector(
+              `.nav-buttons button[data-day="${currentDay}"]`
+            );
+            if (currentBtn) {
+              currentBtn.scrollIntoView({
+                inline: "center",
+                behavior: "smooth",
+              });
+            }
+          }, 100);
+        })
+        .catch((error) => console.error("Error loading hadith:", error));
+    </script>
+  </body>
+</html>

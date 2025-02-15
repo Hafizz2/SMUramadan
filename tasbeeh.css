@@ -1,0 +1,161 @@
+/* CSS Variables */
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #e74c3c;
+  --accent-color: #2ecc71;
+  --bg-gradient-start: #f8f9fa;
+  --bg-gradient-end: #eaeaea;
+  --circle-size: 300px;
+}
+
+/* Global Reset & Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Amiri", Arial, sans-serif;
+  background: linear-gradient(
+    135deg,
+    var(--bg-gradient-start),
+    var(--bg-gradient-end)
+  );
+  text-align: center;
+}
+/* Navigation Bar */
+.navbar {
+  background-color: #009688; /* Islamic green */
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
+}
+
+.navbar a.active {
+  background-color: #00796b; /* Darker green for active link */
+  border-radius: 5px;
+}
+
+.navbar a:hover {
+  background-color: #00796b; /* Darker green on hover */
+  border-radius: 5px;
+}
+/* Header */
+header {
+  margin-bottom: 2rem;
+}
+header h1 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+header p {
+  font-size: 1.2rem;
+  color: var(--secondary-color);
+}
+
+/* Main Container */
+.counter-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+}
+
+/* Circular Counter */
+.circle-container {
+  width: var(--circle-size);
+  height: var(--circle-size);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-color) 60%, #34495e);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  /* Make text unselectable */
+  user-select: none;
+}
+.circle-container:active {
+  transform: scale(0.98);
+}
+/* Disable active (press) effect on mobile */
+@media (hover: none) {
+  .circle-container:active {
+    transform: none;
+  }
+}
+.circle-container .count {
+  font-size: 4rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  user-select: none;
+}
+.circle-container .total {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  user-select: none;
+}
+/* Green background when countdown is done */
+.circle-container.active {
+  background: var(--accent-color);
+}
+
+/* Dropdown & Button */
+select,
+button {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  margin-top: 1rem;
+  background: #fff;
+  color: var(--primary-color);
+  outline: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+button {
+  background: var(--secondary-color);
+  color: #fff;
+  border: none;
+}
+button:hover {
+  background: #c0392b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    --circle-size: 250px;
+  }
+  .circle-container .count {
+    font-size: 3rem;
+  }
+  header h1 {
+    font-size: 2rem;
+  }
+  header p {
+    font-size: 1rem;
+  }
+}
