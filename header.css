@@ -1,5 +1,6 @@
 /* Google Fonts Link */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 * {
   padding: 0;
   margin: 0;
@@ -7,14 +8,21 @@
   list-style: none;
   box-sizing: border-box;
 }
+
 body {
   font-family: "Montserrat", sans-serif;
 }
+/* Navigation Bar */
 nav {
   background: #00796b;
   height: 80px;
   width: 100%;
+  position: fixed; /* Ensures navbar is fixed on top */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Higher than other elements */
 }
+
 label.logo {
   color: white;
   font-size: 25px;
@@ -22,56 +30,69 @@ label.logo {
   padding: 0 100px;
   font-weight: bold;
 }
+
 nav ul {
   float: right;
   margin-right: 20px;
 }
+
 nav ul li {
   display: inline-block;
   line-height: 80px;
   margin: 0 5px;
 }
+
 nav ul li a {
   color: white;
   font-size: 17px;
   padding: 7px 13px;
   border-radius: 3px;
   text-transform: uppercase;
+  transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for active state */
 }
-a.active,
-a:hover {
-  background: #008ac5;
-  transition: 0.5s;
+
+/* Active and Hover Effects */
+nav ul li a:hover {
+  background: #008ac5; /* Active link color */
+  color: white;
 }
+
+/* Mobile Menu Button */
 .checkbtn {
   font-size: 22px;
-  color: rgb(255, 255, 255);
+  color: white;
   float: right;
   line-height: 80px;
   margin-right: 30px;
   cursor: pointer;
   display: none;
 }
+
 #check {
   display: none;
 }
+
+/* Responsive Navigation */
 @media (max-width: 1050px) {
   label.logo {
     padding-left: 30px;
   }
+
   nav ul li a {
     font-size: 16px;
   }
 }
-/* Responsive media query code for small screen */
+
 @media (max-width: 890px) {
   .checkbtn {
     display: block;
   }
+
   label.logo {
     font-size: 22px;
   }
-  ul {
+
+  nav ul {
     position: fixed;
     width: 100%;
     height: 100vh;
@@ -80,26 +101,29 @@ a:hover {
     left: -100%;
     text-align: center;
     transition: all 0.5s;
+    z-index: 9999; /* Ensures menu appears above content */
   }
+
   nav ul li {
     display: block;
     margin: 50px 0;
     line-height: 30px;
   }
+
   nav ul li a {
     font-size: 20px;
   }
-  a:hover,
-  a.active {
-    background: none;
-    color: #00dee6;
-  }
+
   #check:checked ~ ul {
     left: 0;
   }
 }
+
+/* Fix for Content Below Menu */
 section {
   background: url("bg.jpg") no-repeat;
   background-size: cover;
   height: calc(100vh - 80px);
+  position: relative;
+  z-index: 1; /* Ensures section stays below the menu */
 }

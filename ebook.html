@@ -14,6 +14,7 @@
         padding: 0;
         font-family: "Amiri", sans-serif;
         background: #f0f0f0;
+        padding-top: 80px; /* Pushes content below the navbar */
       }
 
       /* Navigation Bar */
@@ -129,13 +130,17 @@
     </main>
 
     <script>
-      // Fetch and insert the navbar
-      fetch("header.html")
-        .then((response) => response.text())
-        .then((data) => {
-          document.getElementById("navbar-placeholder").innerHTML = data;
-        })
-        .catch((error) => console.error("Error loading navbar:", error));
+      document.addEventListener("DOMContentLoaded", function () {
+        // Your navbar-related JavaScript here
+
+        // Fetch and insert the navbar
+        fetch("header.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+          })
+          .catch((error) => console.error("Error loading navbar:", error));
+      });
 
       // Load hadith data from hadith.json
       fetch("hadith.json")
@@ -152,7 +157,7 @@
           function showHadith(day) {
             const hadith = data.find((h) => h.day === parseInt(day));
             if (hadith) {
-              hadithDisplay.innerHTML = parseStyling(hadith.text);
+              hadithDisplay.innerHTML = parseStyling(hadith.content);
               updateActiveButton(day);
             }
           }

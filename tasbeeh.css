@@ -22,6 +22,7 @@ body {
     var(--bg-gradient-end)
   );
   text-align: center;
+  padding-top: 80px; /* Pushes content below the navbar */
 }
 /* Navigation Bar */
 .navbar {
@@ -73,9 +74,10 @@ header p {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* If you want to center it vertically too */
   width: 100%;
   max-width: 400px;
-  margin-bottom: 2rem;
+  margin: 0 auto; /* Centers the wrapper itself */
 }
 
 /* Circular Counter */

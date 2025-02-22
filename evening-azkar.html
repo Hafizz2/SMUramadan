@@ -21,13 +21,17 @@
       rel="stylesheet"
     />
     <script>
-      // Fetch and insert the navbar
-      fetch("header.html")
-        .then((response) => response.text())
-        .then((data) => {
-          document.getElementById("navbar-placeholder").innerHTML = data;
-        })
-        .catch((error) => console.error("Error loading navbar:", error));
+      document.addEventListener("DOMContentLoaded", function () {
+        // Your navbar-related JavaScript here
+
+        // Fetch and insert the navbar
+        fetch("header.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("navbar-placeholder").innerHTML = data;
+          })
+          .catch((error) => console.error("Error loading navbar:", error));
+      });
       // Fetch azkar from JSON file
       fetch("evening_zikr.json")
         .then((response) => response.json())
