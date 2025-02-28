@@ -142,81 +142,97 @@
           .catch((error) => console.error("Error loading navbar:", error));
       });
 
-      // Load hadith data from hadith.json
-      fetch("hadith.json")
-        .then((response) => response.json())
-        .then((data) => {
-          const hadithDisplay = document.getElementById("hadithDisplay");
-          const navButtons = document.getElementById("navButtons");
+      // Load hadith data from files in the "guadegnaye" folder
+      fetchHadith();
 
-          // Get today's day (1-30). If today > 30, default to 1.
-          let currentDay = new Date().getDate();
-          if (currentDay > 30) currentDay = 1;
+      function fetchHadith() {
+        const hadithDisplay = document.getElementById("hadithDisplay");
+        const navButtons = document.getElementById("navButtons");
 
-          // Function to display hadith for a given day
-          function showHadith(day) {
-            const hadith = data.find((h) => h.day === parseInt(day));
-            if (hadith) {
-              hadithDisplay.innerHTML = parseStyling(hadith.content);
-              updateActiveButton(day);
-            }
-          }
+        // Get today's day (1-30). If today > 30, default to 1.
+        let currentDay = new Date().getDate();
+        if (currentDay > 30) currentDay = 1;
 
-          // Function to update active button style
-          function updateActiveButton(activeDay) {
-            const buttons = document.querySelectorAll(
-              ".nav-buttons button[data-day]"
+        // Function to display hadith for a given day
+        function showHadith(day) {
+          const fileName = `guadegnaye/${day}.txt`; // Fetch the corresponding file for the day
+          fetch(fileName)
+            .then((response) => response.text())
+            .then((data) => {
+              hadithDisplay.innerHTML = parseStyling(data); // Display content
+              updateActiveButton(day); // Update active button
+            })
+            .catch((error) =>
+              console.error(`Error loading ${fileName}:`, error)
             );
-            buttons.forEach((btn) => {
-              btn.classList.toggle(
-                "active",
-                btn.getAttribute("data-day") == activeDay
-              );
+        }
+
+        // Function to update active button style
+        function updateActiveButton(activeDay) {
+          const buttons = document.querySelectorAll(
+            ".nav-buttons button[data-day]"
+          );
+          buttons.forEach((btn) => {
+            btn.classList.toggle(
+              "active",
+              btn.getAttribute("data-day") == activeDay
+            );
+          });
+        }
+
+        // Create day buttons
+        function createNavButtons() {
+          for (let i = 1; i <= 30; i++) {
+            const btn = document.createElement("button");
+            btn.textContent = i;
+            btn.setAttribute("data-day", i);
+            btn.addEventListener("click", () => {
+              currentDay = i;
+              showHadith(currentDay);
+            });
+            navButtons.appendChild(btn);
+          }
+        }
+
+        // Function to convert custom tags to styled HTML (if needed)
+        function parseStyling(text) {
+          return text
+            .replace(/<quote>/g, "<quote>")
+            .replace(/<\/quote>/g, "</quote>")
+            .replace(/<b>/g, "<strong>")
+            .replace(/<\/b>/g, "</strong>")
+            .replace(/<u>/g, '<span style="text-decoration:underline">')
+            .replace(/<\/u>/g, "</span>");
+        }
+
+        // Start with the first day of Ramadan
+        if (isRamadanStart()) {
+          currentDay = 1;
+        }
+
+        createNavButtons();
+        showHadith(currentDay);
+
+        // Scroll the current day's button into view
+        setTimeout(() => {
+          const currentBtn = document.querySelector(
+            `.nav-buttons button[data-day="${currentDay}"]`
+          );
+          if (currentBtn) {
+            currentBtn.scrollIntoView({
+              inline: "center",
+              behavior: "smooth",
             });
           }
+        }, 100);
+      }
 
-          // Create day buttons
-          function createNavButtons() {
-            data.forEach((hadith) => {
-              const btn = document.createElement("button");
-              btn.textContent = hadith.day;
-              btn.setAttribute("data-day", hadith.day);
-              btn.addEventListener("click", () => {
-                currentDay = hadith.day;
-                showHadith(currentDay);
-              });
-              navButtons.appendChild(btn);
-            });
-          }
-
-          // Function to convert custom tags to styled HTML (if needed)
-          function parseStyling(text) {
-            return text
-              .replace(/<quote>/g, "<quote>")
-              .replace(/<\/quote>/g, "</quote>")
-              .replace(/<b>/g, "<strong>")
-              .replace(/<\/b>/g, "</strong>")
-              .replace(/<u>/g, '<span style="text-decoration:underline">')
-              .replace(/<\/u>/g, "</span>");
-          }
-
-          createNavButtons();
-          showHadith(currentDay);
-
-          // Scroll the current day's button into view
-          setTimeout(() => {
-            const currentBtn = document.querySelector(
-              `.nav-buttons button[data-day="${currentDay}"]`
-            );
-            if (currentBtn) {
-              currentBtn.scrollIntoView({
-                inline: "center",
-                behavior: "smooth",
-              });
-            }
-          }, 100);
-        })
-        .catch((error) => console.error("Error loading hadith:", error));
+      // Function to check if today is the first day of Ramadan
+      function isRamadanStart() {
+        const today = new Date();
+        const ramadanStartDate = new Date("2025-02-28"); // Set this to the start date of Ramadan
+        return today.toDateString() === ramadanStartDate.toDateString();
+      }
     </script>
   </body>
 </html>
